@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const Schema = mongoose.Schema;
 
 const cartSchemaFunc = new Schema({
   user: {
@@ -27,4 +27,4 @@ const cartSchemaFunc = new Schema({
   },
 });
 
-module.exports = mongoose.model("CartSchema", cartSchemaFunc);
+module.exports = mongoose.model("cartSchema", cartSchemaFunc);

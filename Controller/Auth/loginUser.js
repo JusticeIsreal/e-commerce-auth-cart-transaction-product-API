@@ -4,12 +4,25 @@ const jwt = require("jsonwebtoken");
 
 // log in as an admin
 const loginUser = async (req, res) => {
-  // get the email and password from user input
-  const { email, password } = req.body;
-
   try {
+    // get the email and password from user input
+    const { useremail, password } = req.body;
+
+    if (!useremail || !password) {
+      return res
+        .status(400)
+        .json({ status: "FAILED", message: "Enter email and password" });
+    }
     // check if user with that email exist
-    const user = await userSchema.findOne({ email });
+    const user = await userSchema.findOne({ useremail });
+
+    if (!user) {
+      return res.status(400).json({
+        status: "FAILED",
+        message: "Email is not asigned to a valide user, Kindly register",
+      });
+    }
+    // if the email is not found or the password doesnt match return error
 
     // encrypt the password
     const validPassword = await bcrypt.compare(password, user.password);
@@ -25,8 +38,8 @@ const loginUser = async (req, res) => {
     // if the email is not found or the password doesnt match return error
     if (!user || !validPassword) {
       return res
-        .satus(400)
-        .json({ status: "FAILED", message: "Invalid user name or password" });
+        .status(400)
+        .json({ status: "FAILED", message: "Invalid email or password" });
     }
 
     // if it matches then create a token with the details
@@ -35,7 +48,6 @@ const loginUser = async (req, res) => {
       id: user.id,
     };
 
-    
     const token = jwt.sign(userToken, process.env.SECRET, { expiresIn: "1d" });
 
     res.status(200).json({ status: "SUCCESS", data: token });

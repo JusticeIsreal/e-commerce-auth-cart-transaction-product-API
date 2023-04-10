@@ -13,6 +13,7 @@ const {
   updateUserPosition,
   deleteUser,
   filterUsers,
+  getSessionUser,
 } = require("../Controller/Auth/usersCRUD.js");
 
 // user authentication route
@@ -26,6 +27,7 @@ router.post("/resetpassword", resetPassword);
 
 // admin access routes
 router.get("/allusers", allUsers);
+router.get("/getsessionuser", getSessionUser);
 router.get("/filterusers", filterUsers);
 router.patch("/updateuser/:id", updateUserPosition);
 router.delete("/deleteuser/:id", deleteUser);

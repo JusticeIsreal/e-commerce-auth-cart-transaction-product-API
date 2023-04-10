@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const helmet = require("helmet");
+const rateLimiter = require("express-rate-limit");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 
@@ -10,6 +12,9 @@ app.use(bodyParser.urlencoded({ limit: "500000000mb", extended: true }));
 // app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
+app.set("trust proxy", 1);
+// app.use(rateLimiter({ windowMs: 15 * 60 * 1000, max: 100 }));
 
 // routes
 const userAccess = require("./Route/userAuthRoute");
@@ -29,3 +34,4 @@ const connectAdminToDataBase = async () => {
   }
 };
 connectAdminToDataBase();
+//
