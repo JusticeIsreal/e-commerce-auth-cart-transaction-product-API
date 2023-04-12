@@ -2,10 +2,9 @@ const userSchema = require("../../Schema/userSchema.js");
 const cartSchema = require("../../Schema/cartSchema.js");
 const jwt = require("jsonwebtoken");
 
-// To get all successful registered users
+// GET ALL SUCESSFULLY REGISTERED USERS
 const allUsers = async (req, res) => {
   try {
-    // check if the user has a successful token lopgin
     const auth = req.headers.authorization;
     if (!auth || !auth.startsWith("Bearer ")) {
       return res.status(401).json({
@@ -14,7 +13,6 @@ const allUsers = async (req, res) => {
       });
     }
 
-    // split token from bearer and get real value to verify
     const token = auth.split(" ")[1];
     const verifyToken = jwt.verify(token, process.env.SECRET);
 
@@ -23,14 +21,22 @@ const allUsers = async (req, res) => {
         .status(401)
         .json({ status: "ERROR", message: "Invalide token access" });
     }
-    // get all users the the database
-    const users = await userSchema.find();
+
+    const users = await userSchema
+      .find({})
+      .populate({
+        path: "transaction",
+      })
+      .populate({
+        path: "cart",
+      });
     res.status(200).json({ status: "SUCCESS", data: users });
   } catch (error) {
     throw Error(error.message);
   }
 };
-// To get all successful registered users
+
+// GET SIGNED IN USER DETAILS
 const getSessionUser = async (req, res) => {
   try {
     // check if the user has a successful token login

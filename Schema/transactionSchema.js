@@ -3,7 +3,15 @@ const mongoose = require("mongoose");
 transactionSchemaFunc = mongoose.Schema({
   usernumber: {
     type: String,
-    required: true,
+    // required: true,
+  },
+  paystackRef: {
+    type: String,
+    // required: true,
+  },
+  transactionstatus: {
+    type: String,
+    // required: true,
   },
   deliveryaddress: {
     type: String,
@@ -14,6 +22,7 @@ transactionSchemaFunc = mongoose.Schema({
       productname: String,
       productprice: Number,
       quantity: Number,
+      total: Number,
     },
   ],
   user: [
