@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 transactionSchemaFunc = mongoose.Schema({
-  usernumber: {
+  adminnote: {
     type: String,
     // required: true,
   },
@@ -11,7 +11,7 @@ transactionSchemaFunc = mongoose.Schema({
   },
   transactionstatus: {
     type: String,
-    // required: true,
+    default: "Pending",
   },
   deliveryaddress: {
     type: String,
@@ -23,6 +23,7 @@ transactionSchemaFunc = mongoose.Schema({
       productprice: Number,
       quantity: Number,
       total: Number,
+      clientnote: String,
     },
   ],
   user: [
@@ -38,7 +39,7 @@ transactionSchemaFunc = mongoose.Schema({
   },
   status: {
     type: String,
-    default: "Open",
+    default: "Processing",
   },
   timestamp: { type: Date, default: Date.now },
 });
