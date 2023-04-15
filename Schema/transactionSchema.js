@@ -5,6 +5,10 @@ transactionSchemaFunc = mongoose.Schema({
     type: String,
     // required: true,
   },
+  authorization_url: {
+    type: String,
+    // required: true,
+  },
   paystackRef: {
     type: String,
     // required: true,

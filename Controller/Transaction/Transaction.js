@@ -1,80 +1,9 @@
 const transactionSchema = require("../../Schema/transactionSchema.js");
 const userSchema = require("../../Schema/userSchema.js");
 const jwt = require("jsonwebtoken");
-
-// POST TRANSACTION
-// const postTransaction = async (req, res) => {
-//   try {
-//     const { deliveryaddress, product } = req.body;
-
-//     // check if the user has a successful token login
-//     const auth = req.headers.authorization;
-//     if (!auth || !auth.startsWith("Bearer ")) {
-//       return res.status(401).json({
-//         status: "FAILED",
-//         message: "No token provided, You dont have access to this data",
-//       });
-//     }
-
-//     // split token from bearer and get real value to verify
-//     const token = auth.split(" ")[1];
-//     const verifyToken = await jwt.verify(token, process.env.SECRET);
-
-//     if (!verifyToken) {
-//       return res
-//         .status(401)
-//         .json({ status: "ERROR", message: "Invalid token access" });
-//     }
-//     const user = await userSchema.findById(verifyToken.id);
-
-//     if (!user) {
-//       res.status(401).json({ msg: "user not found" });
-//     }
-
-//     const products = [];
-//     let totalAmount = 0;
-
-//     for (const p of product) {
-//       const total = p.productprice * p.quantity; // calculate the total cost
-//       const newProduct = {
-//         productname: p.productname,
-//         productprice: p.productprice,
-//         quantity: p.quantity,
-//         total: total,
-//       };
-//       products.push(newProduct);
-//       totalAmount += total; // add the total cost to the totalAmount variable
-//     }
-
-//     const productsWithTotal = products.map((p) => ({
-//       productname: p.productname,
-//       productprice: p.productprice,
-//       quantity: p.quantity,
-//       total: p.total,
-//     }));
-//     const Transaction = new transactionSchema({
-//       deliveryaddress: deliveryaddress,
-//       product: productsWithTotal,
-//       totalAmount: totalAmount,
-//     });
-
-//     user.transaction.push(Transaction);
-//     await user.save();
-//     Transaction.user.push(user);
-//     await Transaction.save();
-//     // return products array with total for each product
-
-//     res.status(200).json({
-//       status: "SUCCESS",
-//       data: Transaction,
-//     });
-//   } catch (error) {
-//     throw Error(error.message);
-//   }
-// };
-
 const axios = require("axios");
 
+// POST TRANSACTION
 const postTransaction = async (req, res) => {
   try {
     // const { deliveryaddress, product, card } = req.body;
@@ -160,12 +89,13 @@ const postTransaction = async (req, res) => {
       product: productsWithTotal,
       totalAmount: totalAmount,
       paystackRef: paystackRes.data.data.reference,
+      authorization_url: paystackRes.data.data.authorization_url,
       clientnote: clientnote,
     });
 
-    user.transaction.push(Transaction);
+    user.transaction.unshift(Transaction);
     await user.save();
-    Transaction.user.push(user);
+    Transaction.user.unshift(user);
     await Transaction.save();
 
     res.status(200).json({
@@ -181,7 +111,7 @@ const postTransaction = async (req, res) => {
   }
 };
 
-// fetch all transaction
+// FETCH ALL TRANSACTION
 const allTransaction = async (req, res) => {
   try {
     // check if the user has a successful token lopgin
@@ -203,38 +133,37 @@ const allTransaction = async (req, res) => {
         .json({ status: "ERROR", message: "Invalide token access" });
     }
     // get all transaction the the database populated by the respective users
-    const transaction = await transactionSchema.find({}).populate({
-      path: "user",
-    });
-
-    // console.log(transaction);
+    const transaction = await transactionSchema
+      .find({})
+      .sort({ createdAt: -1 })
+      .populate({ path: "user" });
     res.status(200).json({ status: "SUCCESS", data: transaction });
   } catch (error) {
     throw Error(error.message);
   }
 };
 
-// fetch single
+//FETCH SINGLE TRANSACTION
 const getSingleTransaction = async (req, res) => {
   try {
-    // // check if the user has a successful token lopgin
-    // const auth = req.headers.authorization;
-    // if (!auth || !auth.startsWith("Bearer ")) {
-    //   return res.status(401).json({
-    //     status: "FAILED",
-    //     message: "No token provided, You dont have access to this data",
-    //   });
-    // }
+    // check if the user has a successful token lopgin
+    const auth = req.headers.authorization;
+    if (!auth || !auth.startsWith("Bearer ")) {
+      return res.status(401).json({
+        status: "FAILED",
+        message: "No token provided, You dont have access to this data",
+      });
+    }
 
-    // // split token from bearer and get real value to verify
-    // const token = auth.split(" ")[1];
-    // const verifyToken = jwt.verify(token, process.en.SECRET);
+    // split token from bearer and get real value to verify
+    const token = auth.split(" ")[1];
+    const verifyToken = jwt.verify(token, process.env.SECRET);
 
-    // if (!verifyToken) {
-    //   return res
-    //     .status(401)
-    //     .json({ status: "ERROR", message: "Invalide token access" });
-    // }
+    if (!verifyToken) {
+      return res
+        .status(401)
+        .json({ status: "ERROR", message: "Invalide token access" });
+    }
     // get all users the the database
     const singleTransaction = await transactionSchema
       .findById(req.params.id)
@@ -253,35 +182,35 @@ const getSingleTransaction = async (req, res) => {
 const updateTransaction = async (req, res) => {
   try {
     // check if there is successfull token login
-    // const auth = req.headers.authorization;
-    // if (!auth || !auth.startsWith("Bearer ")) {
-    //   return res.status(401).json({
-    //     status: "FAILED",
-    //     message: "No token provided, You dont have access to this data",
-    //   });
-    // }
+    const auth = req.headers.authorization;
+    if (!auth || !auth.startsWith("Bearer ")) {
+      return res.status(401).json({
+        status: "FAILED",
+        message: "No token provided, You dont have access to this data",
+      });
+    }
 
-    // // get token and verify with jwt
-    // const token = auth.split(" ")[1];
-    // const verifyToken = await jwt.verify(token, process.env.SECRET);
-    // if (!verifyToken) {
-    //   return res
-    //     .status(401)
-    //     .json({ status: "ERROR", message: "Invalide token access" });
-    // }
+    // get token and verify with jwt
+    const token = auth.split(" ")[1];
+    const verifyToken = await jwt.verify(token, process.env.SECRET);
+    if (!verifyToken) {
+      return res
+        .status(401)
+        .json({ status: "ERROR", message: "Invalide token access" });
+    }
 
-    // // find user with token
-    // const allowAccess = await userSchema.findOne({
-    //   _id: verifyToken.id,
-    // });
+    // find user with token
+    const allowAccess = await userSchema.findOne({
+      _id: verifyToken.id,
+    });
 
-    // // condition user with access
-    // if (allowAccess.verified != true || allowAccess.position != "owner") {
-    //   return res.status(401).json({
-    //     status: "ERROR",
-    //     message: "You are not authorized to perform this action",
-    //   });
-    // }
+    // condition user with access
+    if (allowAccess.verified != true) {
+      return res.status(401).json({
+        status: "ERROR",
+        message: "You are not authorized to perform this action",
+      });
+    }
 
     // update user
     const transaction = await transactionSchema.findOneAndUpdate(
