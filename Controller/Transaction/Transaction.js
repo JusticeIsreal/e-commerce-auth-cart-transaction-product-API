@@ -6,8 +6,9 @@ const axios = require("axios");
 // POST TRANSACTION
 const postTransaction = async (req, res) => {
   try {
-    // const { deliveryaddress, product, card } = req.body;
-    const { deliveryaddress, product, clientnote } = req.body;
+    //
+    const { deliveryaddress, product, anyinfo, deliveryfee, homedelivery } =
+      req.body;
 
     // check if the user has a successful token login
     const auth = req.headers.authorization;
@@ -20,12 +21,12 @@ const postTransaction = async (req, res) => {
 
     // split token from bearer and get real value to verify
     const token = auth.split(" ")[1];
-    const verifyToken = await jwt.verify(token, process.env.SECRET);
+    const verifyToken = jwt.verify(token, process.env.SECRET);
 
     if (!verifyToken) {
       return res
         .status(401)
-        .json({ status: "ERROR", message: "Invalid token access" });
+        .json({ status: "ERROR", message: "Invalide token access" });
     }
 
     const user = await userSchema.findById(verifyToken.id);
@@ -33,9 +34,9 @@ const postTransaction = async (req, res) => {
     if (!user) {
       res.status(401).json({ msg: "user not found" });
     }
-
+    const deliverycharges = deliveryfee + homedelivery;
     const products = [];
-    let totalAmount = 0;
+    let totalAmount = deliverycharges;
 
     for (const p of product) {
       const total = p.productprice * p.quantity; // calculate the total cost
@@ -63,6 +64,7 @@ const postTransaction = async (req, res) => {
       Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
       "Content-Type": "application/json",
     };
+
     const data = {
       email: user.useremail,
       amount: totalAmount * 100, // Paystack amount is in kobo (i.e. 100 kobo = 1 Naira)
@@ -71,6 +73,7 @@ const postTransaction = async (req, res) => {
         products: productsWithTotal,
       },
     };
+
     const paystackRes = await axios.post(
       "https://api.paystack.co/transaction/initialize",
       data,
@@ -90,7 +93,9 @@ const postTransaction = async (req, res) => {
       totalAmount: totalAmount,
       paystackRef: paystackRes.data.data.reference,
       authorization_url: paystackRes.data.data.authorization_url,
-      clientnote: clientnote,
+      anyinfo: anyinfo,
+      deliveryfee,
+      homedelivery,
     });
 
     user.transaction.unshift(Transaction);
@@ -108,6 +113,7 @@ const postTransaction = async (req, res) => {
     });
   } catch (error) {
     throw new Error(error);
+    console.log(error);
   }
 };
 

@@ -5,28 +5,45 @@ const cartSchemaFunc = new Schema({
   user: [
     {
       type: Schema.Types.ObjectId,
-      ref: "userSchema",
+      ref: "adminAccessSchema",
       required: true,
     },
   ],
-  product: [
-    {
-      productname: String,
-      productclass: String,
-      productcategory: String,
-      productdescription: String,
-      productnumber: String,
-      image: Array,
-      productoldprice: Number,
-      productprice: Number,
-      quantity: Number,
-      total: Number,
-      clientnote: String,
-    },
-  ],
-  totalAmount: {
+  image: { type: Array, required: true },
+  productname: {
+    type: String,
+    required: true,
+  },
+  productID: {
+    type: String,
+    required: true,
+  },
+  productcategory: {
+    type: String,
+    required: true,
+  },
+  productclass: {
+    type: String,
+    required: true,
+  },
+  productdescription: {
+    type: String,
+    required: true,
+  },
+  productnumber: {
+    type: String,
+    required: true,
+  },
+  productoldprice: {
+    type: Number,
+  },
+  productprice: {
     type: Number,
     required: true,
+  },
+  quantity: {
+    type: Number,
+    default: 1,
   },
   createdAt: {
     type: Date,

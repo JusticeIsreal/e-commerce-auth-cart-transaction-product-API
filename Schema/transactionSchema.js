@@ -5,6 +5,18 @@ transactionSchemaFunc = mongoose.Schema({
     type: String,
     // required: true,
   },
+  anyinfo: {
+    type: String,
+    // required: true,
+  },
+  deliveryfee: {
+    type: Number,
+    // required: true,
+  },
+  homedelivery: {
+    type: Number,
+    // required: true,
+  },
   authorization_url: {
     type: String,
     // required: true,
