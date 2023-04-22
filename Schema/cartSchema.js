@@ -24,7 +24,7 @@ const cartSchemaFunc = new Schema({
   },
   productclass: {
     type: String,
-    required: true,
+    // required: true,
   },
   productdescription: {
     type: String,
