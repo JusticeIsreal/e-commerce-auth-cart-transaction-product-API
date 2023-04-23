@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 transactionSchemaFunc = mongoose.Schema({
   adminnote: {
     type: String,
-    // required: true,
+    default: "Nil",
   },
   anyinfo: {
     type: String,
@@ -36,6 +36,7 @@ transactionSchemaFunc = mongoose.Schema({
   product: [
     {
       productname: String,
+      productspec: String,
       productprice: Number,
       quantity: Number,
       total: Number,

@@ -43,6 +43,7 @@ const postTransaction = async (req, res) => {
       const newProduct = {
         productname: p.productname,
         productprice: p.productprice,
+        productspec: p.productspec,
         quantity: p.quantity,
         clientnote: p.clientnote,
         total: total,
@@ -54,6 +55,7 @@ const postTransaction = async (req, res) => {
     const productsWithTotal = products.map((p) => ({
       productname: p.productname,
       productprice: p.productprice,
+      productspec: p.productspec,
       quantity: p.quantity,
       clientnote: p.clientnote,
       total: p.total,
@@ -218,7 +220,7 @@ const updateTransaction = async (req, res) => {
       });
     }
 
-    // update user
+    // update transaction
     const transaction = await transactionSchema.findOneAndUpdate(
       { _id: req.params.id }, // specify the user to update
       req.body,

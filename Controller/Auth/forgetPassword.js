@@ -10,7 +10,7 @@ const resetPassword = async (req, res) => {
   const existinguser = await userSchema.findOne({
     useremail: useremail,
   });
-
+  // console.log(existinguser);
   if (!existinguser) {
     return res.status(400).json({
       status: "FAILED",
