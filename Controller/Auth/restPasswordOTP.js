@@ -11,6 +11,7 @@ const resetPasswordOTP = async (req, res) => {
         message: "Enter OTP",
       });
     }
+
     // if true  find the otp sent to the user  from the otp database
     const UserOTPVerificationRecord = await UserOTPVerification.findOne({
       userId,

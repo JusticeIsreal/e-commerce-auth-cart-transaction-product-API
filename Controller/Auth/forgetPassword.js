@@ -1,3 +1,4 @@
+const UserOTPVerification = require("../../Schema/UserOTPVerification");
 const userSchema = require("../../Schema/userSchema");
 
 const sendOTPVerificationEmail = require("./sendOTP");
@@ -17,7 +18,7 @@ const resetPassword = async (req, res) => {
       error: `${useremail} is not a registered member, kindly register`,
     });
   }
-
+  await UserOTPVerification.deleteMany({ userId: existinguser._id });
   try {
     // send OTP
     await sendOTPVerificationEmail({ _id: existinguser._id, useremail }, res);

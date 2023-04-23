@@ -9,7 +9,7 @@ const resendOTP = async (req, res) => {
 
     // if none
     if (!userId || !useremail) {
-      throw Error("Enter password");
+      throw Error();
     } else {
       // delete any previous OTP record for that user
       await UserOTPVerification.deleteMany({ userId });
