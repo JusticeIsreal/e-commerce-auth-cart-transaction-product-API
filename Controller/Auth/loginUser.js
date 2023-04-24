@@ -38,7 +38,7 @@ const loginUser = async (req, res) => {
     if (user.block === true) {
       return res.status(403).json({
         status: "ERROR",
-        message: "You have been blocked from access the application",
+        message: "You have been blocked from accessing this application",
       });
     }
 

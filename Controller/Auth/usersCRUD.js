@@ -35,7 +35,7 @@ const allUsers = async (req, res) => {
     throw Error(error.message);
   }
 };
- //FETCH SINGLE TRANSACTION
+//FETCH SINGLE TRANSACTION
 const getSingleUser = async (req, res) => {
   try {
     // check if the user has a successful token lopgin
@@ -133,7 +133,7 @@ const updateUserPosition = async (req, res) => {
     });
 
     // condition user with access
-    if (allowAccess.verified != true || allowAccess.position != "owner") {
+    if (allowAccess.verified != true) {
       return res.status(401).json({
         status: "ERROR",
         message: "You are not authorized to perform this action",
