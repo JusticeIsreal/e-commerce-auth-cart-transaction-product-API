@@ -34,6 +34,13 @@ const loginUser = async (req, res) => {
         message: "Email has not been verified, Kindly Verify you email",
       });
     }
+    // if user have been blocked
+    if (user.block === true) {
+      return res.status(403).json({
+        status: "ERROR",
+        message: "You have been blocked from access the application",
+      });
+    }
 
     // if the email is not found or the password doesnt match return error
     if (!user || !validPassword) {

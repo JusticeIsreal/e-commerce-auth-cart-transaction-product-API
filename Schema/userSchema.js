@@ -7,6 +7,10 @@ adminAccessSchemaFunc = mongoose.Schema({
     minlength: [5, "Enter full name"],
     trim: true,
   },
+  block: {
+    type: Boolean,
+    default: false,
+  },
   useremail: {
     type: String,
     required: [true, "Enter your email address"],
