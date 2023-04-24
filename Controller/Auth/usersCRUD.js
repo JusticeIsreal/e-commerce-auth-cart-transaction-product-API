@@ -35,6 +35,43 @@ const allUsers = async (req, res) => {
     throw Error(error.message);
   }
 };
+ //FETCH SINGLE TRANSACTION
+const getSingleUser = async (req, res) => {
+  try {
+    // check if the user has a successful token lopgin
+    const auth = req.headers.authorization;
+    if (!auth || !auth.startsWith("Bearer ")) {
+      return res.status(401).json({
+        status: "FAILED",
+        message: "No token provided, You dont have access to this data",
+      });
+    }
+
+    // split token from bearer and get real value to verify
+    const token = auth.split(" ")[1];
+    const verifyToken = jwt.verify(token, process.env.SECRET);
+
+    if (!verifyToken) {
+      return res
+        .status(401)
+        .json({ status: "ERROR", message: "Invalide token access" });
+    }
+    // get all users the the database
+    const singleUser = await userSchema
+      .findById(req.params.id)
+      .populate({
+        path: "transaction",
+      })
+      .populate({
+        path: "cart",
+      });
+
+    // console.log(transaction);
+    res.status(200).json({ status: "SUCCESS", data: singleUser });
+  } catch (error) {
+    throw Error(error.message);
+  }
+};
 
 // GET SIGNED IN USER DETAILS
 const getSessionUser = async (req, res) => {
@@ -179,4 +216,5 @@ module.exports = {
   updateUserPosition,
   deleteUser,
   getSessionUser,
+  getSingleUser,
 };

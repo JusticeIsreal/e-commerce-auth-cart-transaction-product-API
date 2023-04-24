@@ -14,6 +14,7 @@ const {
   deleteUser,
   filterUsers,
   getSessionUser,
+  getSingleUser,
 } = require("../Controller/Auth/usersCRUD.js");
 
 // user authentication route
@@ -29,6 +30,7 @@ router.post("/resetpassword", resetPassword);
 router.get("/allusers", allUsers);
 router.get("/getsessionuser", getSessionUser);
 router.get("/filterusers", filterUsers);
+router.patch("/getsingleuser/:id", getSingleUser);
 router.patch("/updateuser/:id", updateUserPosition);
 router.delete("/deleteuser/:id", deleteUser);
 
