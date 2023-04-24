@@ -133,7 +133,7 @@ const updateUserPosition = async (req, res) => {
     });
 
     // condition user with access
-    if (allowAccess.verified != true) {
+    if (allowAccess.verified !== true) {
       return res.status(401).json({
         status: "ERROR",
         message: "You are not authorized to perform this action",
