@@ -24,7 +24,7 @@ const resetPassword = async (req, res) => {
       });
     }
     // if non , throw another error
-    if (User.password != "") {
+    if (User.password !== " ") {
       return res.status(400).json({
         status: "FAILED",
         message: "Enter OTP again",
