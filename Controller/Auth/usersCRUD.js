@@ -165,30 +165,19 @@ const deleteUser = async (req, res) => {
       });
     }
     const token = auth.split(" ")[1];
-    const verifyToken = await jwt.verify(token, process.env.SECRET);
+    const verifyToken = jwt.verify(token, process.env.SECRET);
 
     if (!verifyToken) {
-      return res
-        .status(401)
-        .json({ status: "ERROR", message: "Invalide token access" });
-    }
-
-    const allowAccess = await userSchema.findOne({
-      _id: verifyToken.id,
-    });
-    if (allowAccess.verified != true || allowAccess.position != "owner") {
       return res.status(401).json({
         status: "ERROR",
-        message: "You are not authorized to perform this action",
+        message: "Invalid token access",
       });
     }
 
-    const deleteUser = await userSchema.findOneAndDelete({
-      _id: req.params.id,
-    });
+    await userSchema.findByIdAndDelete(req.params.id);
     res
       .status(200)
-      .json({ status: "USER DELETe SUCCESSFUL", data: deleteUser });
+      .json({ status: "SUCCESS", message: "User deleted successfully" });
   } catch (error) {
     throw new Error(error.message);
   }
