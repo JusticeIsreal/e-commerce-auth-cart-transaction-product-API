@@ -43,7 +43,8 @@ const resetPasswordOTP = async (req, res) => {
         message: "Incorrect OTP",
       });
     }
-    await userSchema.updateOne({ _id: userId }, { password:" " });
+    await userSchema.updateOne({ _id: userId }, { password: "" });
+
     await UserOTPVerification.deleteMany({ userId });
     res.status(200).json({
       status: "SUCCESS",
