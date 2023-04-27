@@ -35,7 +35,7 @@ const resetPassword = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, rounds);
 
     await userSchema.updateOne({ _id: userId }, { password: hashPassword });
-    await UserOTPVerification.deleteMany({ userId });
+    // await UserOTPVerification.deleteMany({ userId });
     res.status(200).json({
       status: "SUCCESS",
       message: "Password Reset Successful",

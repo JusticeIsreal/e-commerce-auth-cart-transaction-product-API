@@ -44,7 +44,7 @@ const resetPasswordOTP = async (req, res) => {
       });
     }
     await userSchema.updateOne({ _id: userId }, { password: "" });
-    // await UserOTPVerification.deleteMany({ userId });
+    await UserOTPVerification.deleteMany({ userId });
     res.status(200).json({
       status: "SUCCESS",
       message: "Reset password",
