@@ -12,8 +12,14 @@ app.use(bodyParser.urlencoded({ limit: "500000000mb", extended: true }));
 // app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // Enable CORS for all routes
-app.use(cors({ origin: "https://e-commerce-client-ashen.vercel.app" }));
-
+app.use(cors());
+app.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://e-commerce-client-ashen.vercel.app"
+  );
+  next();
+});
 app.use(helmet());
 app.set("trust proxy", 1);
 // app.use(rateLimiter({ windowMs: 15 * 60 * 1000, max: 100 }));
